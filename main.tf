@@ -20,6 +20,13 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
+resource "azurerm_subnet" "subnet3" {
+  depends_on = [ azurerm_resource_group.rg ,  azurerm_virtual_network.vnet]
+  name                 = "feature-subnet"
+  resource_group_name  = "sanbox-resources"
+  virtual_network_name = "sanbox-network"
+  address_prefixes     = ["10.0.3.0/24"]
+}
 
 #explicit
 resource "azurerm_public_ip" "pip" {
