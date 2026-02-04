@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "depend-resources"
+  name     = "sanbox-resources"
   location = "central india"
 }
 
 #IMPLICIT
 resource "azurerm_virtual_network" "vnet" {
-  name                = "depend-network"
+  name                = "sanbox-network"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -15,8 +15,8 @@ resource "azurerm_virtual_network" "vnet" {
 resource "azurerm_subnet" "subnet" {
   depends_on = [ azurerm_resource_group.rg ,  azurerm_virtual_network.vnet]
   name                 = "internal"
-  resource_group_name  = "depend-resources"
-  virtual_network_name = "depend-network"
+  resource_group_name  = "sanbox-resources"
+  virtual_network_name = "sanbox-network"
   address_prefixes     = ["10.0.2.0/24"]
 }
 
@@ -25,7 +25,7 @@ resource "azurerm_subnet" "subnet" {
 resource "azurerm_public_ip" "pip" {
   depends_on = [ azurerm_resource_group.rg ]
   name                = "adependPublicIp"
-  resource_group_name = "depend-resources"
+  resource_group_name = "sanbox-resources"
   location            = "central india"
   allocation_method   = "Static"
 }
@@ -33,7 +33,7 @@ resource "azurerm_public_ip" "pip" {
 
 #implicit
 resource "azurerm_network_interface" "nic" {
-  name                = "depend-nic"
+  name                = "sanbox-nic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -49,7 +49,7 @@ resource "azurerm_network_interface" "nic" {
 
 #implicit
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "depend-machine"
+  name                = "sanbox-machine"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = "Standard_D2s_v5"
